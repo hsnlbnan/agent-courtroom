@@ -1,6 +1,6 @@
 {
   "name": "agent-courtroom",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Coding-agent CLIs (Claude Code, Codex) debate your codebase or idea in a 3D courtroom. Local-only, read-only members.",
   "type": "module",
   "license": "MIT",
