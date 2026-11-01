@@ -1,6 +1,6 @@
 'use client';
 // A popover's way out: a click outside `root`, Escape, and (optionally) scrolling or resizing
-// close it. Escape stays inside the popover, and focus goes back to the trigger.
+// close it (scrolling inside the popover does not). Escape stays inside the popover, and focus goes back to the trigger.
 import { type RefObject, useEffect } from 'react';
 
 export function useDismiss(open: boolean, root: RefObject<HTMLElement | null>, close: () => void,
@@ -14,7 +14,8 @@ export function useDismiss(open: boolean, root: RefObject<HTMLElement | null>, c
       close();
       trigger?.current?.focus();
     };
-    const away = () => close();
+    // Scrolling the popover's own list is not "away"; only the page or an ancestor scrolling is.
+    const away = (e: Event) => { if (!(e.target instanceof Node && root.current?.contains(e.target))) close(); };
     addEventListener('mousedown', outside);
     addEventListener('keydown', esc, true);
     if (onScroll) { addEventListener('resize', away); addEventListener('scroll', away, true); }

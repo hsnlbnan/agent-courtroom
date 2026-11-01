@@ -246,6 +246,9 @@ select.ctl { padding-right: 8px; }
 .picker-pop .m { font-weight: 500; }
 .picker-pop .h { font-size: 12px; color: var(--ink-3); }
 .picker-pop .check { margin-left: auto; font-size: 12px; }
+.picker-pop .info { display: inline-flex; align-self: center; margin-inline-start: auto; color: var(--ink-3); }
+.picker-pop .info + .check { margin-left: 0; }
+.sr-only { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .picker-pop .others li { color: var(--ink-3); cursor: default; justify-content: space-between; }
 .picker-pop .others .m { font-weight: 400; margin-inline-end: auto; }
 .picker-pop .others li { align-items: center; justify-content: flex-start; }

@@ -84,7 +84,15 @@ export default function ModelPicker({ value, providers, label, onChange, mode, c
                     <li key={m} id={`${id}-${i}`} role="option" aria-selected={m === value}
                       className={`${i === active ? 'active' : ''}${m === value ? ' on' : ''}`}
                       onMouseEnter={() => setActive(i)} onMouseDown={(e) => { e.preventDefault(); choose(m); }}>
-                      <span className="m">{p.modelInfo?.[m]?.name ?? m}</span><span className="h">{t.hints[m] ?? p.modelInfo?.[m]?.hint ?? ''}</span>
+                      <span className="m">{p.modelInfo?.[m]?.name ?? m}</span>
+                      {t.hints[m] && <span className="h">{t.hints[m]}</span>}
+                      {/* A provider's own description can run long: it sits behind an info icon instead of in the row. */}
+                      {!t.hints[m] && p.modelInfo?.[m]?.hint && (
+                        <span className="info" title={p.modelInfo[m].hint}>
+                          <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="8" cy="8" r="6.25" /><path d="M8 7.25v3.5M8 5.1v.1" /></svg>
+                          <span className="sr-only">{p.modelInfo[m].hint}</span>
+                        </span>
+                      )}
                       {m === value && <span className="check" aria-hidden="true">✓</span>}
                     </li>
                   );
