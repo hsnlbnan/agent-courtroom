@@ -2,11 +2,11 @@
 // One command to run the council: checks the environment, picks a free port,
 // starts the local server and opens the browser with this run's token.
 //
-// usage: npx agent-courtroom [--port 4317] [--no-open]
+// usage: npx agent-courtroom [--port 4317] [--no-open] [--version]
 import { spawn, spawnSync } from 'node:child_process';
 import { createServer } from 'node:net';
 import { randomBytes } from 'node:crypto';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -18,11 +18,17 @@ const value = (name) => { const i = args.indexOf(name); return i >= 0 ? args[i +
 const say = (s = '') => process.stdout.write(`${s}\n`);
 const fail = (msg, hint) => { say(`\n  ✗ ${msg}`); if (hint) say(`    ${hint}`); say(); process.exit(1); };
 
+if (flag('--version') || flag('-v')) {
+  say(JSON.parse(readFileSync(join(HERE, '..', 'package.json'), 'utf8')).version);
+  process.exit(0);
+}
+
 if (flag('--help') || flag('-h')) {
   say('agent-courtroom: rol yapan kodlama ajanlarının bir projeyi tartıştığı yerel konsey.\n');
   say('  npx agent-courtroom              sunucuyu başlatır ve tarayıcıyı açar');
   say('  npx agent-courtroom --port 5000  belirli bir port');
   say('  npx agent-courtroom --no-open    tarayıcıyı açmaz, bağlantıyı yazar');
+  say('  npx agent-courtroom --version    sürümü yazar');
   process.exit(0);
 }
 

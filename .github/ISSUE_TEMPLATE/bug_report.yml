@@ -1,0 +1,47 @@
+name: Bug report
+description: Something broke or behaved unexpectedly.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. A security problem (a member writing files, leaking secrets, escaping its folder) should not go here: use **Security → Report a vulnerability** instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. npx agent-courtroom
+        2. New case → folder …, members …
+        3. …
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `npx agent-courtroom --version`.
+    validations:
+      required: true
+  - type: dropdown
+    id: clis
+    attributes:
+      label: Member CLIs involved
+      multiple: true
+      options: [Claude Code, Codex, Other, Not sure]
+  - type: input
+    id: env
+    attributes:
+      label: OS, Node version and browser
+      placeholder: macOS 26, Node 24.1, Chrome 141
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Server output, the case's error note or a screenshot. Remove anything private first.
+      render: text
