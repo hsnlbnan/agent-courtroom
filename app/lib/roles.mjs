@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 // Display names for the built-in roles in the case record (the UI translates them itself).
 const ROLE_LABELS = {
   optimist: 'İyimser', skeptic: 'Şüpheci', deterministic: 'Deterministik',
-  'user-advocate': 'Kullanıcı savunucusu', 'cost-ops': 'Maliyet / ops', security: 'Güvenlik', chair: 'Başkan',
+  'user-advocate': 'Kullanıcı savunucusu', 'cost-ops': 'Maliyet / ops', security: 'Güvenlik', chair: 'Hakim',
 };
 export const roleLabel = (r) => ROLE_LABELS[r] ?? r;
 

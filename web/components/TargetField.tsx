@@ -96,7 +96,7 @@ export default function TargetField({ value, asText, onChange, suggest, browse, 
         )}
       </div>
       <p className="kind-line" id={`${listId}-kind`}>
-        <span className={`kind-tag k-${kind}`} aria-live="polite">{t.detected}: {kind === 'dir' ? t.kindDir : kind === 'file' ? t.kindFile : kind === 'text' ? t.kindText : t.kindEmpty}</span>
+        <span className={`kind-tag k-${kind}`} aria-live="polite">{kind === 'dir' ? t.kindDir : kind === 'file' ? t.kindFile : kind === 'text' ? t.kindText : ''}</span>
         {kind === 'text' && <span className={`count${value.trim().length > IDEA_MAX ? ' over' : ''}`}>{t.chars(value.trim().length, IDEA_MAX)}</span>}
         {homeMatch && (
           <button type="button" className="link home-hint" onClick={() => { onChange({ target: homeMatch.path }); inputRef.current?.focus(); }}>

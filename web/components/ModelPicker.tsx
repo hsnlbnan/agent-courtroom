@@ -27,10 +27,10 @@ export default function ModelPicker({ value, providers, label, onChange, mode, c
   const usable = providers.filter(fits);
   const options = usable.flatMap((p) => p.models.map((m) => ({ provider: p, model: m })));
   const others = providers.filter((p) => !fits(p));
-  const why = (p: Provider) => !p.installed ? t.notInstalled
-    : p.status === 'untested' ? t.untested
-    : p.status !== 'enabled' ? t.off
-    : claudeOnly && p.id !== 'claude' ? t.judgeClaude : t.ideaOnly;
+  // Green: connected on this machine, just not usable in this slot (the hint says why). Red: not set up yet.
+  const ready = (p: Provider) => p.installed && p.status === 'enabled';
+  const why = (p: Provider) => (ready(p) ? (claudeOnly && p.id !== 'claude' ? t.judgeClaude : t.ideaOnly) : '');
+  const state = (p: Provider) => (ready(p) ? t.connectedState : p.installed ? t.notConnected : t.notInstalled);
 
   // Opening highlights the current model; closing on an outside click.
   const show = () => {
@@ -98,9 +98,10 @@ export default function ModelPicker({ value, providers, label, onChange, mode, c
               <p className="group-title">{t.otherProviders}</p>
               <ul>
                 {others.filter((p) => p.status !== 'blocked').map((p) => (
-                  <li key={p.id} title={p.note}>
+                  <li key={p.id}>
+                    <span className={`st-dot ${ready(p) ? 'ok' : 'no'}`} role="img" aria-label={state(p)} title={state(p)} />
                     <span className="m">{p.name}</span>
-                    <span className={`h st-${p.status}`}>{why(p)}</span>
+                    {why(p) && <span className="h">{why(p)}</span>}
                     {p.setup && onConnect && !claudeOnly && (
                       <button type="button" className="connect" onMouseDown={(e) => { e.preventDefault(); setOpen(false); onConnect(p); }}>
                         {p.connected ? t.connectManage : t.connect}

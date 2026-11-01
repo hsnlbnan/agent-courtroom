@@ -5,6 +5,7 @@
   --ink-3: oklch(0.6 0.008 75);
   --rule: oklch(0.88 0.008 75);
   --arc: oklch(0.56 0.17 30);
+  --ok: oklch(0.58 0.13 150);
   color-scheme: light;
 }
 /* Dark follows the system unless the person picked light; or they picked dark. */
@@ -16,6 +17,7 @@
     --ink-3: oklch(0.56 0.008 75);
     --rule: oklch(0.3 0.006 280);
     --arc: oklch(0.68 0.15 30);
+    --ok: oklch(0.7 0.14 150);
     color-scheme: dark;
   }
 }
@@ -26,6 +28,7 @@
   --ink-3: oklch(0.56 0.008 75);
   --rule: oklch(0.3 0.006 280);
   --arc: oklch(0.68 0.15 30);
+  --ok: oklch(0.7 0.14 150);
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -244,7 +247,11 @@ select.ctl { padding-right: 8px; }
 .picker-pop .h { font-size: 12px; color: var(--ink-3); }
 .picker-pop .check { margin-left: auto; font-size: 12px; }
 .picker-pop .others li { color: var(--ink-3); cursor: default; justify-content: space-between; }
-.picker-pop .others .m { font-weight: 400; }
+.picker-pop .others .m { font-weight: 400; margin-inline-end: auto; }
+.picker-pop .others li { align-items: center; justify-content: flex-start; }
+.st-dot { inline-size: 7px; block-size: 7px; border-radius: 50%; flex: none; }
+.st-dot.ok { background: var(--ok); }
+.st-dot.no { background: var(--arc); }
 .chip:hover { color: var(--ink); }
 .chip.on { color: var(--ink); box-shadow: inset 0 0 0 1px oklch(from var(--ink) l c h / 0.4); background: oklch(from var(--ink) l c h / 0.05); }
 .chip.on .dot { background: var(--accent); }
