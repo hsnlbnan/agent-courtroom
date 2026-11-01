@@ -1,0 +1,13 @@
+{
+  "name": "agent-council",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Role-played coding-agent CLIs debate an idea or a codebase; watch it live or replay it.",
+  "type": "module",
+  "engines": { "node": ">=22.5" },
+  "scripts": {
+    "start": "node server.mjs",
+    "import-demo": "node lib/importer.mjs ../reports/2026-10-30-council-app",
+    "test": "node --test test/*.test.mjs"
+  }
+}

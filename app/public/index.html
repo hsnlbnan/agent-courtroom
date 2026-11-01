@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Council</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/app.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#transcript">İçeriğe geç</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5.5" r="2.5"/><circle cx="5" cy="15" r="2.5"/><circle cx="19" cy="15" r="2.5"/><path d="M12 9v3M7.4 13.6 10 12M16.6 13.6 14 12"/></svg>
+      <span>Agent Council</span>
+    </div>
+    <label class="case-picker">
+      <span class="sr-only">Dava seç</span>
+      <select id="case-select"></select>
+    </label>
+    <button id="new-case" class="btn btn-primary" type="button">Yeni dava</button>
+  </header>
+
+  <section class="case-head" aria-labelledby="case-title">
+    <div class="case-head-main">
+      <p class="eyebrow" id="case-kind">—</p>
+      <h1 id="case-title">Bir dava seçin</h1>
+      <ul class="chips" id="case-chips" aria-label="Dava özellikleri"></ul>
+    </div>
+    <div class="case-head-side">
+      <dl class="stats">
+        <div><dt>Tur</dt><dd id="stat-turn" class="num">0 / 0</dd></div>
+        <div><dt>Süre</dt><dd id="stat-time" class="num">0:00</dd></div>
+        <div><dt>Token</dt><dd id="stat-tokens" class="num">—</dd></div>
+      </dl>
+      <div class="controls">
+        <label class="speed" id="speed-wrap">Hız
+          <select id="speed">
+            <option value="2">2×</option>
+            <option value="6" selected>6×</option>
+            <option value="20">20×</option>
+            <option value="0">Anında</option>
+          </select>
+        </label>
+        <button id="resume" class="btn btn-primary" type="button" hidden>Devam</button>
+        <button id="replay" class="btn" type="button">Baştan oynat</button>
+        <button id="stop" class="btn btn-danger" type="button" aria-keyshortcuts="Escape" hidden>Durdur <kbd>Esc</kbd></button>
+      </div>
+    </div>
+    <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+  </section>
+
+  <main class="layout classic">
+    <section id="record" class="record">
+      <header class="record-head">
+        <h2 id="record-title" class="section-title">Tutanak</h2>
+        <p class="hint">Rozetler üyenin kendi STANCE etiketidir; <span class="mismatch-inline">?</span> işareti etiket ile metnin uyuşmadığı yerleri gösterir. Renkler her zaman bir isimle birlikte gösterilir.</p>
+      </header>
+      <ol id="transcript" class="transcript" role="log" aria-live="polite" aria-relevant="additions" aria-labelledby="record-title"></ol>
+      <section id="verdict" class="verdict" hidden aria-labelledby="verdict-title"></section>
+    </section>
+  </main>
+
+  <div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
+
+  <dialog id="new-case-dialog" aria-labelledby="new-case-title">
+    <form method="dialog" id="new-case-form" class="dialog-form">
+      <h2 id="new-case-title">Yeni dava</h2>
+      <p class="dialog-lead">Üyeler hedefi yalnızca okur. Canlı dava Claude Code'u headless çalıştırır; aboneliğinizden harcar.</p>
+      <label class="field">
+        <span>Hedef</span>
+        <input name="target" required autocomplete="off" spellcheck="false" placeholder="~/Documents/Github/proje">
+        <small>Kod modunda bir klasör, fikir modunda tek bir .md dosyası.</small>
+      </label>
+      <fieldset class="field">
+        <legend>Mod</legend>
+        <label class="radio"><input type="radio" name="mode" value="code" checked> Kod tabanı <small>Read · Glob · Grep</small></label>
+        <label class="radio"><input type="radio" name="mode" value="idea"> Fikir <small>araç yok</small></label>
+      </fieldset>
+      <label class="field">
+        <span>Odak sorusu <small>(isteğe bağlı)</small></span>
+        <input name="focus" autocomplete="off" placeholder="Yayına hazır mı?">
+      </label>
+      <label class="field field-inline">
+        <span>En fazla tur</span>
+        <input name="maxTurns" type="number" min="2" max="18" value="6" inputmode="numeric">
+      </label>
+      <fieldset class="field">
+        <legend>Satıcılar</legend>
+        <label class="radio"><input type="checkbox" checked disabled> Claude Code <small>açık</small></label>
+        <label class="radio is-off"><input type="checkbox" disabled> Codex <small>İleri düzey · kapalı: <code>-s read-only</code> canary testini geçemedi</small></label>
+      </fieldset>
+      <p id="new-case-error" class="form-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn" formnovalidate>Vazgeç</button>
+        <button value="start" class="btn btn-primary" id="start-case">Davayı başlat</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

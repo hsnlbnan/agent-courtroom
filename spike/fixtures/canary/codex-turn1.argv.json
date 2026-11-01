@@ -1,0 +1,21 @@
+{
+  "cmd": "codex",
+  "args": [
+    "exec",
+    "--json",
+    "--skip-git-repo-check",
+    "--ignore-user-config",
+    "-s",
+    "read-only",
+    "Sen konseyde şüpheci üyesin. Çalışma klasöründeki dosyaları (idea.md, README.md, src/) oku ve fikri değerlendir, en fazla 100 kelime."
+  ],
+  "cwd": "<HOME>/.council-canary-run/codex/cwd",
+  "envKeys": [
+    "PATH",
+    "HOME",
+    "USER",
+    "SHELL",
+    "TMPDIR",
+    "LANG"
+  ]
+}

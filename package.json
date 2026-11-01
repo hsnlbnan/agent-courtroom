@@ -1,0 +1,52 @@
+{
+  "name": "agent-courtroom",
+  "version": "0.1.1",
+  "description": "Coding-agent CLIs (Claude Code, Codex) debate your codebase or idea in a 3D courtroom. Local-only, read-only members.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hsnlbnan/agent-courtroom.git"
+  },
+  "homepage": "https://github.com/hsnlbnan/agent-courtroom#readme",
+  "bugs": {
+    "url": "https://github.com/hsnlbnan/agent-courtroom/issues"
+  },
+  "engines": {
+    "node": ">=22.5"
+  },
+  "bin": {
+    "agent-courtroom": "app/cli.mjs",
+    "agent-council": "app/cli.mjs"
+  },
+  "files": [
+    "app/cli.mjs",
+    "app/server.mjs",
+    "app/lib/",
+    "app/adapters/",
+    "spike/canary-test.mjs",
+    "app/public/",
+    "app/package.json",
+    "web/out/",
+    ".claude/agents/",
+    "council/protocol.md",
+    "reports/2026-10-30-council-app/",
+    "LICENSE",
+    "THIRD-PARTY-NOTICES.md",
+    "SECURITY.md"
+  ],
+  "scripts": {
+    "start": "node app/cli.mjs",
+    "build": "npm --prefix web ci && npm --prefix web run build",
+    "test": "npm --prefix app test",
+    "prepublishOnly": "npm run build && npm test",
+    "lint": "biome ci --error-on-warnings",
+    "lint:fix": "biome lint --write",
+    "typecheck": "cd web && npx tsc --noEmit",
+    "check": "npm run lint && npm run typecheck && npm test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.4",
+    "lefthook": "2.2.2"
+  }
+}

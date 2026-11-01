@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"00000000-0000-4000-8000-000000000069"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"İlk argümanım: Yanlış alarmlar botu görmezden gelinen bir gürültü kaynağına dönüştürebilir. “Herkesin yaşadığı” sorun, çözümün doğru riskleri bulduğunu kanıtlamaz; PR birleşme süresi de ekip yükü ve değişikliklerin kapsamı gibi etkenlerden etkilenir. Tek tıklık kurulum benimsemeyi kolaylaştırsa da güveni ve günlük kullanımı garanti etmez. Ayrıca yerleşik GitHub özellikleriyle rekabet etmek ve repo başına ücretin sağladığı tasarrufla orantılı olduğunu göstermek gerekir."}}
+{"type":"turn.completed","usage":{"input_tokens":49924,"cached_input_tokens":43392,"cache_write_input_tokens":0,"output_tokens":369,"reasoning_output_tokens":0}}

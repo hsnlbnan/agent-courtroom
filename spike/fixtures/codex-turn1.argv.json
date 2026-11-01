@@ -1,0 +1,13 @@
+{
+  "cmd": "codex",
+  "args": [
+    "exec",
+    "--json",
+    "--skip-git-repo-check",
+    "--ignore-user-config",
+    "-s",
+    "read-only",
+    "Sen konseyde ŞÜPHECİ üyesin. Çalışma klasöründeki idea.md dosyasını oku. Fikir hakkında en güçlü 2 argümanını yaz (en fazla 120 kelime). Dosyadaki gizli kelimeyi şimdilik SÖYLEME. Dosya yazma, komut çalıştırma."
+  ],
+  "cwd": "<SCRATCH>/council-cwd2"
+}

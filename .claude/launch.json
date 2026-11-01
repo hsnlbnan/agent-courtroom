@@ -1,0 +1,32 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "council-app",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "COUNCIL_ALLOWED_ORIGINS=http://localhost:3130",
+        "node",
+        "app/server.mjs",
+        "--port",
+        "4317"
+      ],
+      "port": 4317,
+      "url": "http://127.0.0.1:4317"
+    },
+    {
+      "name": "council-web",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "NEXT_PUBLIC_COUNCIL_API=http://127.0.0.1:4317",
+        "npm",
+        "--prefix",
+        "web",
+        "run",
+        "dev"
+      ],
+      "port": 3130,
+      "url": "http://localhost:3130"
+    }
+  ]
+}

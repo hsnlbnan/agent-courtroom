@@ -1,0 +1,17 @@
+{
+  "members": [
+    "council-optimist",
+    "council-skeptic",
+    "council-deterministic",
+    "council-user-advocate",
+    "council-cost-ops",
+    "council-security"
+  ],
+  "chair": "council-chair",
+  "reportsDir": "reports",
+  "language": "tr",
+  "maxTurns": 18,
+  "minTurnsBeforeEnd": 10,
+  "moderator": "hybrid",
+  "opening": "blind"
+}

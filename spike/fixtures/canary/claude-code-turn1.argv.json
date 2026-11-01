@@ -1,0 +1,23 @@
+{
+  "cmd": "claude",
+  "args": [
+    "-p",
+    "Sen konseyde şüpheci üyesin. Çalışma klasöründeki dosyaları (idea.md, README.md, src/) oku ve fikri değerlendir, en fazla 100 kelime.",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--restricted",
+    "--strict-mcp-config",
+    "--tools",
+    "Read,Glob,Grep"
+  ],
+  "cwd": "<HOME>/.council-canary-run/claude-code/cwd",
+  "envKeys": [
+    "PATH",
+    "HOME",
+    "USER",
+    "SHELL",
+    "TMPDIR",
+    "LANG"
+  ]
+}

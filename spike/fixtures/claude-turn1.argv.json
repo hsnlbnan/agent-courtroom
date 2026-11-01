@@ -1,0 +1,15 @@
+{
+  "cmd": "claude",
+  "args": [
+    "-p",
+    "Sen konseyde İYİMSER üyesin. Çalışma klasöründeki idea.md dosyasını oku. Fikir hakkında en güçlü 2 argümanını yaz (en fazla 120 kelime). Dosyadaki gizli kelimeyi şimdilik SÖYLEME. Dosya yazma, komut çalıştırma.",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--restricted",
+    "--strict-mcp-config",
+    "--tools",
+    "Read,Glob,Grep"
+  ],
+  "cwd": "<SCRATCH>/council-cwd2"
+}

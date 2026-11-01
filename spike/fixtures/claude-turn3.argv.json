@@ -1,0 +1,17 @@
+{
+  "cmd": "claude",
+  "args": [
+    "-p",
+    "Karşı üyenin 2. tur cevabı:\n\"\"\"\nİlk argümanım: Yanlış alarmlar botu görmezden gelinen bir gürültü kaynağına dönüştürebilir. “Herkesin yaşadığı” sorun, çözümün doğru riskleri bulduğunu kanıtlamaz; PR birleşme süresi de ekip yükü ve değişikliklerin kapsamı gibi etkenlerden etkilenir. Tek tıklık kurulum benimsemeyi kolaylaştırsa da güveni ve günlük kullanımı garanti etmez. Ayrıca yerleşik GitHub özellikleriyle rekabet etmek ve repo başına ücretin sağladığı tasarrufla orantılı olduğunu göstermek gerekir.\n\"\"\"\nSon tur: tek cümlelik nihai duruşun ve 0-1 arası güven skoru. Sonra ayrı bir satırda \"KOD: <kelime>\" biçiminde, 1. turda okuduğun dosyadaki gizli kod kelimesini yaz. Dosyayı yeniden okumaya çalışma; hafızandan yaz.",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--restricted",
+    "--strict-mcp-config",
+    "--resume",
+    "00000000-0000-4000-8000-000000000049",
+    "--tools",
+    "Read,Glob,Grep"
+  ],
+  "cwd": "<SCRATCH>/council-cwd2"
+}

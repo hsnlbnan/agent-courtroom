@@ -1,0 +1,103 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": {
+    "enabled": false
+  },
+  "files": {
+    "includes": [
+      "app/**/*.mjs",
+      "app/public/**/*.js",
+      "app/public/**/*.css",
+      "web/**/*.ts",
+      "web/**/*.tsx",
+      "web/app/**/*.css",
+      "spike/**/*.mjs",
+      "web/scripts/*.mjs",
+      "*.json",
+      "biome.json",
+      "!**/node_modules",
+      "!web/.next",
+      "!web/out",
+      "!**/fixtures",
+      "!web/next-env.d.ts"
+    ]
+  },
+  "formatter": {
+    "enabled": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 160
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "all",
+      "arrowParentheses": "always"
+    }
+  },
+  "css": {
+    "parser": {
+      "cssModules": false
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
+  },
+  "overrides": [
+    // Listbox pattern (APG): focus stays on the combobox and options are shown via
+    // aria-activedescendant, so <li role="option"> is intentionally not focusable.
+    {
+      "includes": [
+        "web/components/ModelPicker.tsx",
+        "web/components/TargetField.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noNoninteractiveElementToInteractiveRole": "off",
+            "useFocusableInteractive": "off"
+          }
+        }
+      }
+    },
+    // Rich renders a fixed string into blocks; positions are the identity.
+    {
+      "includes": [
+        "web/components/Rich.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noArrayIndexKey": "off"
+          }
+        }
+      }
+    },
+    // CSS is ordered by component, not by specificity; the cascade here is deliberate.
+    {
+      "includes": [
+        "**/*.css"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDescendingSpecificity": "off"
+          }
+        }
+      }
+    }
+  ]
+}

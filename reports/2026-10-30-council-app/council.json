@@ -1,0 +1,433 @@
+{
+  "target": "~/Documents/Github/agent-council (motion: reports/2026-10-30-council-app/motion.md)",
+  "focus": "Build and open-source a headless-CLI multi-agent council/courtroom app?",
+  "date": "2026-10-30",
+  "mode": "conversation",
+  "turns": 18,
+  "ended_by": "cap",
+  "roster": [
+    {
+      "role": "optimist",
+      "agent": "council-optimist",
+      "model": "sonnet"
+    },
+    {
+      "role": "skeptic",
+      "agent": "council-skeptic",
+      "model": "opus"
+    },
+    {
+      "role": "deterministic",
+      "agent": "council-deterministic",
+      "model": "opus"
+    },
+    {
+      "role": "user-advocate",
+      "agent": "council-user-advocate",
+      "model": "sonnet"
+    },
+    {
+      "role": "cost-ops",
+      "agent": "council-cost-ops",
+      "model": "sonnet"
+    },
+    {
+      "role": "security",
+      "agent": "council-security",
+      "model": "sonnet"
+    }
+  ],
+  "chair_model": "fable",
+  "votes": [
+    {
+      "role": "optimist",
+      "vote": "conditional",
+      "confidence": 0.7,
+      "conditions": [
+        "Önce 1 günlük spike: Claude ve Codex ile gerçek headless tur, ID ile resume, cold start ve stream-json şeması ölçülsün, fixture olarak kaydedilsin",
+        "Canary testi (repo dışı sahte dosya okuma ve injection) geçmeden hiçbir CLI açılmasın; geçemeyen CLI varsayılan kapalı kalsın",
+        "v0 kapsamı: kod tabanı modu Claude-only (--restricted, tek-satıcı etiketi), fikir modu Claude ve Codex (araçsız/boş cwd, env allowlist)",
+        "v0 arayüzü: akan transkript, konuşmacı renk ve metin etiketi, REPLY_TO bağlantılı animasyonsuz STANCE rozeti, etiket-metin uyuşmazlığı işareti, verdict paneli, durdur",
+        "Replay-first: spike'ta kaydedilen akışlar UI geliştirmesi için fixture olarak kullanılsın",
+        "Gemini, Kimi, Cursor v0 dışı; Gemini ancak ID ile resume ve plan-modu salt-okuma kapıları geçince eklensin",
+        "Ürün hiçbir CLI'da --yolo veya --dangerously-* bayrağı sunmasın"
+      ],
+      "findings": [
+        {
+          "claim": "Altı CLI'nin tümünde headless prompt modu ve JSON/stream-json çıktısı var; adaptör katmanı mümkün ama şemalar ve resume semantiği CLI başına farklı.",
+          "evidence": "reports/2026-10-30-council-app/cli-help/claude.txt:150-154; reports/2026-10-30-council-app/cli-help/qwen.txt:58,65-66; reports/2026-10-30-council-app/cli-help/gemini.txt:38-45; reports/2026-10-30-council-app/cli-help/kimi.txt:19-21; reports/2026-10-30-council-app/cli-help/cursor-agent.txt:18-22",
+          "severity": "high"
+        },
+        {
+          "claim": "ACP ortak bir yol değil; yalnızca Gemini, Qwen ve Kimi'de var, Claude/Codex/Cursor'da yok.",
+          "evidence": "reports/2026-10-30-council-app/cli-help/gemini.txt:32; reports/2026-10-30-council-app/cli-help/qwen.txt:43; reports/2026-10-30-council-app/cli-help/kimi.txt:32",
+          "severity": "medium"
+        },
+        {
+          "claim": "Protokolün REPLY_TO/STANCE yapısı ürünün ham veri modeli; bu konuşmada gerçek challenge ve concede turları üretti.",
+          "evidence": "council/protocol.md:40-56; reports/2026-10-30-council-app/conversation.md:45,68,81,117,130,167",
+          "severity": "medium"
+        },
+        {
+          "claim": "Fikir modunda Codex, canary testini geçerse v0'a çok-satıcılı değer ve düşük yüzeyle girebilir; kod tabanı modu Claude-only kalmalı.",
+          "evidence": "reports/2026-10-30-council-app/motion.md:3-4; reports/2026-10-30-council-app/cli-help/claude.txt:259-263; reports/2026-10-30-council-app/cli-help/codex.txt:92-95",
+          "severity": "high"
+        },
+        {
+          "claim": "Etiket-metin kayması gerçek bir sorun (soru soran üye 'build' yazdı); UI rozeti uyuşmazlığı işaretlemeli.",
+          "evidence": "reports/2026-10-30-council-app/context.md:28-32; reports/2026-10-30-council-app/conversation.md:211",
+          "severity": "medium"
+        },
+        {
+          "claim": "Maliyet tahmini ölçümle düzeldi: dava başına ~1,2M bağlam tokenı (3-5M tahmini çürüdü); cold start ve headless resume süresi hâlâ ölçülmedi.",
+          "evidence": "reports/2026-10-30-council-app/conversation.md:213-217,226; reports/2026-10-30-council-app/context.md:35-37",
+          "severity": "medium"
+        },
+        {
+          "claim": "Revize v0 tahmini 7-8 gün ve doğrulanmamış; önce 1 günlük spike şart.",
+          "evidence": "reports/2026-10-30-council-app/conversation.md:237-242 [assumption]",
+          "severity": "medium"
+        }
+      ]
+    },
+    {
+      "role": "skeptic",
+      "vote": "conditional",
+      "confidence": 0.75,
+      "conditions": [
+        "UI'dan önce 1 günlük headless spike yapılsın: Claude `-p --resume` ile Codex `exec resume`; spike'ta cold start süresi, tur başına token, gerçek stream şeması ve ID ile resume kaydedilip fixture olarak saklansın",
+        "Her CLI, repo içine yerleştirilmiş enjeksiyon dosyasıyla repo dışındaki sahte canary'yi okumaya zorlanan testi geçmeli; canary metni stream, SQLite ve UI'da hiç görünmemeli; geçemeyen CLI varsayılan olarak kapalı kalır",
+        "v0 = Claude `--restricted` (kod tabanı modu) + fikir modunda Codex `-s read-only`; Gemini, Cursor ve Kimi v0 dışında; ürün hiçbir `--yolo` veya `--dangerously-*` bayrağı sunmaz",
+        "v0 arayüzü karar paneli, akan transkript ve REPLY_TO bağlantılı, etiket-metin uyuşmazlığını işaretleyen STANCE rozetinden oluşur; mahkeme sahnesi ve maliyet göstergesi v1'e kalır",
+        "Süre tahmini (7–8 gün) spike'tan sonra yeniden verilsin; spike başarısız olursa çok satıcılı vaat geri çekilsin"
+      ],
+      "findings": [
+        {
+          "claim": "Prototip çok satıcılı headless CLI senaryosunu hiç test etmiyor; repoda orkestratör kodu ya da test yok",
+          "evidence": "reports/2026-10-30-council-app/context.md:35-37",
+          "severity": "high"
+        },
+        {
+          "claim": "Gemini, belirli bir oturumu ID ile resume edemiyor; --resume yalnızca latest/index alıyor, --session-id yeni oturum açıyor",
+          "evidence": "reports/2026-10-30-council-app/cli-help/gemini.txt:38-40",
+          "severity": "high"
+        },
+        {
+          "claim": "Salt-okuma zorlaması CLI'dan CLI'a farklı; cursor-agent -p varsayılanda yazma ve bash yetkisine sahip, Kimi'de yalnızca --plan var",
+          "evidence": "reports/2026-10-30-council-app/cli-help/cursor-agent.txt:18-20",
+          "severity": "high"
+        },
+        {
+          "claim": "Transkriptin kendisi sızıntı kanalı: SQLite'a yazılıp replay ile paylaşılan transkript, ajanın okuduğu repo dışı içeriği taşıyabilir",
+          "evidence": "reports/2026-10-30-council-app/motion.md:36-37",
+          "severity": "high"
+        },
+        {
+          "claim": "Protokol etiketleri tek satıcıyla bile yanlış çıktı (STANCE yanlış etiketlendi, build kayması oldu); Gemini, Kimi ve Cursor'da schema zorlaması yok",
+          "evidence": "reports/2026-10-30-council-app/context.md:28-32",
+          "severity": "medium"
+        },
+        {
+          "claim": "Token tahminleri (2–3M, 3–5M) ölçümle çürüdü: oturum içinde dava başına ~1,2M; headless cold start ise hâlâ ölçülmedi",
+          "evidence": "reports/2026-10-30-council-app/conversation.md:213-217",
+          "severity": "medium"
+        },
+        {
+          "claim": "Güncel kapsamla v0 süresi 4–6 değil 7–8 gün ve bu tahmin doğrulanmadı",
+          "evidence": "reports/2026-10-30-council-app/conversation.md:237-242",
+          "severity": "medium"
+        }
+      ]
+    },
+    {
+      "role": "deterministic",
+      "vote": "conditional",
+      "confidence": 0.65,
+      "conditions": [
+        "Kodlamadan önce 1 günlük spike: Claude ve Codex için gerçek stream-json/JSONL örnek çıktıları ve ID ile resume denemesi kaydedilip fixture olarak repoya eklensin",
+        "Spike'ta headless süreç başına cold start ve tur başına token ölçülsün; MVP tahmini bu ölçüme göre yeniden verilsin",
+        "Her üye için salt-okur davranış (Claude --restricted / --tools \"\", Codex -s read-only) canary testiyle doğrulanmadan varsayılan olarak açılmasın",
+        "v0 Claude-only ya da Claude + Codex ise ürün bunu açıkça kapsam daraltması olarak belgelesin (motion.md:3-4, :24-26)"
+      ],
+      "findings": [
+        {
+          "claim": "Altı CLI'ın altısında da headless prompt modu ve JSON akış çıktısı var, ama adları farklı (codex: exec --json JSONL; kimi'de json seçeneği yok) ve olay şemaları hiçbir help dosyasında yok",
+          "evidence": "reports/2026-10-30-council-app/cli-help/claude.txt:150-154, codex.txt:245-246, gemini.txt:45, kimi.txt:19-21, qwen.txt:58, cursor-agent.txt:21-22",
+          "severity": "high"
+        },
+        {
+          "claim": "Gemini'de ID ile resume belgelenmemiş: -r yalnızca 'latest' veya index alıyor, --session-id yalnızca yeni oturum başlatıyor",
+          "evidence": "reports/2026-10-30-council-app/cli-help/gemini.txt:38-40",
+          "severity": "high"
+        },
+        {
+          "claim": "Claude --restricted kod çalıştıran araçları ve WebFetch'i kaldırıyor, dosya araçlarını çalışma dizinleriyle sınırlıyor; MCP yalnızca --strict-mcp-config ile atlanıyor, env okuma engeli yazmıyor; --tools \"\" tüm araçları kapatıyor",
+          "evidence": "reports/2026-10-30-council-app/cli-help/claude.txt:199-213, :259-263",
+          "severity": "high"
+        },
+        {
+          "claim": "codex exec help'inde -a/--ask-for-approval yok; read-only sandbox yazmayı engelliyor ama okuma kapsamına dair bir satır yok",
+          "evidence": "reports/2026-10-30-council-app/cli-help/codex.txt:117-123, :161-255, :92-95",
+          "severity": "medium"
+        },
+        {
+          "claim": "System prompt bayrağı yalnızca claude ve qwen'de var; maliyet/bütçe bayrağı yalnızca claude --max-budget-usd (API calls) ve qwen sınırları; claude --bare OAuth okumuyor",
+          "evidence": "reports/2026-10-30-council-app/cli-help/claude.txt:30, :236, :135-136, :45-56, qwen.txt:36-37, :70-71",
+          "severity": "medium"
+        },
+        {
+          "claim": "Prototipte orkestratör kodu yok; üyeler Claude alt ajanları, planlanan path B Claude Agent SDK üzerinde ve çok satıcılı headless CLI'ı test etmiyor",
+          "evidence": "README.md:3, :7; .claude/skills/council/SKILL.md:52, :64; docs/superpowers/specs/2026-10-30-agent-council-design.md:12",
+          "severity": "high"
+        },
+        {
+          "claim": "Bu koşuda ölçülen dava toplamı ≈1.2M context token, üye turu başına 31–54k; context.md'deki 100–180k başka bir koşudan ve generic ajanlardan geliyor",
+          "evidence": "reports/2026-10-30-council-app/conversation.md:213-217, reports/2026-10-30-council-app/context.md:26-27",
+          "severity": "low"
+        }
+      ]
+    },
+    {
+      "role": "user-advocate",
+      "vote": "conditional",
+      "confidence": 0.65,
+      "conditions": [
+        "1 günlük spike: Claude ve Codex için resume, cold start ve gerçek akış şeması ölçülsün; tur süresi kullanıcıya gösterilebilir olsun",
+        "v0 arayüzü karar paneli olsun (oy, azınlık görüşü, doğrulanmış path:line) ve bağlantılı, animasyonsuz STANCE rozeti içersin; etiket-metin uyuşmazlığı işaretlensin",
+        "Arayüz 'tek-satıcı modu' ve her üyenin salt-okunur durumunu açıkça göstersin; canary testini geçmeyen CLI varsayılan kapalı olsun",
+        "İlk açılışta kurulu/girişli CLI kontrol ekranı ve sürüm uyuşmazlığında açık hata mesajı olsun",
+        "Erişilebilirlik temeli: renge ek metin etiketi, aria-live akış, klavye ile durdur; arayüz dili ayarlanabilir olsun"
+      ],
+      "findings": [
+        {
+          "claim": "Kurulum yükü yüksek: kullanıcıda birden çok girişli CLI olması gerekir; Docker şartı bu deneyimi bozar",
+          "evidence": "reports/2026-10-30-council-app/motion.md:40-43",
+          "severity": "high"
+        },
+        {
+          "claim": "Tur başına bekleme ve akış biçimi CLI'dan CLI'a değişir; cold start ölçülmedi",
+          "evidence": "reports/2026-10-30-council-app/context.md:23-26",
+          "severity": "high"
+        },
+        {
+          "claim": "Gerçek koşuda tartışma 'build' onaylarına kaydı (moderatör varken de); bağlantılı STANCE rozeti bu yüzden değerli",
+          "evidence": "reports/2026-10-30-isim-analiz/conversation.md:68-99",
+          "severity": "medium"
+        },
+        {
+          "claim": "Üyelerin yanlış satır atfı ve yanlış STANCE etiketi kullanıcı güvenini bozar; uygulama doğrulayıp işaretlemeli",
+          "evidence": "reports/2026-10-30-council-app/context.md:27-30",
+          "severity": "medium"
+        },
+        {
+          "claim": "Erişilebilirlik ve yerelleştirme gereksinimi motion'da yok",
+          "evidence": "reports/2026-10-30-council-app/motion.md:15-19",
+          "severity": "medium"
+        }
+      ]
+    },
+    {
+      "role": "cost-ops",
+      "vote": "conditional",
+      "confidence": 0.65,
+      "conditions": [
+        "Kod yazmadan önce 1 günlük spike: Claude ve Codex için headless resume, cold start süresi ve gerçek stream-json şeması ölçülsün, tahmin buna göre yeniden verilsin",
+        "v0 kapsamı Claude artı fikir modunda Codex ile sınırlı kalsın, Gemini v1'e ertelensin",
+        "Her adaptör için kaydedilmiş stream fixture ve CLI sürüm kapısı olsun",
+        "Tur sayısı, süre ve üye sayısı için tavan konsun",
+        "Yayından önce her satıcının ToS'u headless ve abonelik kullanımı için kontrol edilsin"
+      ],
+      "findings": [
+        {
+          "claim": "Dava başına bağlam yaklaşık 1,2M token. T11'deki 2–3M tahmini ölçümle çürütüldü. Headless cold start ise hâlâ ölçülmedi.",
+          "evidence": "reports/2026-10-30-council-app/conversation.md:213-217",
+          "severity": "medium"
+        },
+        {
+          "claim": "Güncel v0 kapsamı (canary testleri, Codex fikir modu, rozet) için tahmin 7–8 gün. Doğrulanmadı, spike gerekir.",
+          "evidence": "[assumption]",
+          "severity": "medium"
+        },
+        {
+          "claim": "Sürüm sürüklenmesi yüksek. qwen'de -p bayrağı zaten kaldırılacak olarak işaretli, bu yüzden adaptör başına fixture ve sürüm kapısı şart.",
+          "evidence": "reports/2026-10-30-council-app/cli-help/qwen.txt:34",
+          "severity": "high"
+        },
+        {
+          "claim": "Gemini ID ile resume yapamıyor görünüyor. Bu adaptörün süresi sınırsız uzayabilir.",
+          "evidence": "reports/2026-10-30-council-app/cli-help/gemini.txt:38-40",
+          "severity": "medium"
+        },
+        {
+          "claim": "Barındırma ve ücretli API maliyeti yok (yerel Node/TS, SSE, SQLite). Asıl maliyet bakım ve kullanıcı kurulum desteği.",
+          "evidence": "reports/2026-10-30-council-app/motion.md:35-43",
+          "severity": "low"
+        },
+        {
+          "claim": "Satıcıların ToS'u headless ve abonelik kullanımına izin veriyor mu, dosyalardan doğrulanamıyor.",
+          "evidence": "[assumption]",
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "role": "security",
+      "vote": "conditional",
+      "confidence": 0.7,
+      "conditions": [
+        "v0 tek-satıcı güvenli çekirdek olarak etiketlenir: Claude --restricted, mümkünse araçsız (--tools \"\"), temiz env allowlist, spawn ile argüman dizisi, shell:true yok",
+        "Her ek CLI (Codex fikir modu dahil) release öncesi canary testini geçer: depodaki enjeksiyon dosyası, repo dışı/home sahte canary okuma, canary metni stream, SQLite ve UI'da görünmez; geçemeyen CLI varsayılan kapalı kalır",
+        "Cursor, Kimi ve Gemini varsayılan kapalı, yalnızca açık uyarı ve kullanıcı onayıyla açılır",
+        "Ürün --yolo, --force ve --dangerously-* bayraklarını hiçbir CLI için sunmaz",
+        "Yerel sunucu 127.0.0.1'e bağlanır, rastgele oturum token'ı ve Origin/Host denetimi vardır; ajan çıktısı sanitize edilerek render edilir",
+        "SQLite 0600 izniyle ve repo dışında tutulur; vaka dışa aktarımı sır redaksiyonundan geçer"
+      ],
+      "findings": [
+        {
+          "claim": "Salt-okunur zorlama CLI'lar arasında eşit değil: Codex sandbox'ı yazmayı sınırlıyor ama okuma kapsamı doğrulanmadı; plan/ask modları yalnızca davranış tanımı",
+          "evidence": "reports/2026-10-30-council-app/cli-help/codex.txt:92-95; reports/2026-10-30-council-app/cli-help/cursor-agent.txt:28-31; reports/2026-10-30-council-app/cli-help/gemini.txt:29; reports/2026-10-30-council-app/cli-help/kimi.txt:15-26",
+          "severity": "high"
+        },
+        {
+          "claim": "Başsız modda Claude workspace trust diyaloğu atlanır; depo ayarları, hook'lar ve MCP sessizce yüklenebilir. --restricted kullanıcı/proje ayarlarını yok sayar ama MCP için ayrıca --strict-mcp-config gerekir ve env okumayı engellediği yazmıyor",
+          "evidence": "reports/2026-10-30-council-app/cli-help/claude.txt:175-184; reports/2026-10-30-council-app/cli-help/claude.txt:199-213",
+          "severity": "high"
+        },
+        {
+          "claim": "Üye çıktısı sonraki üyenin prompt'una girdiği için depo kaynaklı prompt injection üyeler arasında yayılır; transkript/SQLite/replay de sızıntı kanalıdır",
+          "evidence": "reports/2026-10-30-council-app/motion.md:36-38; reports/2026-10-30-council-app/conversation.md:90",
+          "severity": "high"
+        },
+        {
+          "claim": "Tehlikeli onay-atlama bayrakları birçok CLI'da mevcut; UI veya varsayılanlarda sunulmamalı",
+          "evidence": "reports/2026-10-30-council-app/cli-help/codex.txt:100-102; reports/2026-10-30-council-app/cli-help/gemini.txt:28; reports/2026-10-30-council-app/cli-help/qwen.txt:40; reports/2026-10-30-council-app/cli-help/kimi.txt:15; reports/2026-10-30-council-app/cli-help/cursor-agent.txt:39",
+          "severity": "high"
+        },
+        {
+          "claim": "Fikir modunda (boş cwd) repo kaynaklı injection kalkar ama home dizini okuması, env/CLI token'ları ve ağ yolu kalır; Docker kimlik bilgisi bağlama sorunu yüzünden çözüm değil",
+          "evidence": "reports/2026-10-30-council-app/conversation.md:180",
+          "severity": "medium"
+        },
+        {
+          "claim": "Yerel SSE/Node sunucusu için XSS, CSRF ve DNS rebinding önlemleri tasarımda henüz tanımlı değil",
+          "evidence": "reports/2026-10-30-council-app/motion.md:35-38 [assumption: uygulama kodu yok]",
+          "severity": "medium"
+        },
+        {
+          "claim": "Satıcı ToS'unun abonelik oturumunun otomatik/başsız kullanımına izin verip vermediği doğrulanmadı",
+          "evidence": "[assumption]",
+          "severity": "medium"
+        }
+      ]
+    }
+  ],
+  "chair": {
+    "verdict": "conditional",
+    "confidence": 0.7,
+    "reason": "Yapılabilir ve 6/6 conditional; ama çok-satıcılı headless CLI'ların salt-okunur ve resume ile tutarlı tartışması hiç test edilmedi (context.md:35-37). Go, 1 günlük spike + canary testinin sonucuna bağlı.",
+    "mvp_scope": {
+      "in": [
+        "Kod tabanı modu: yalnızca Claude --restricted + --strict-mcp-config, temiz env allowlist, arayüzde 'tek-satıcı modu' etiketi (cli-help/claude.txt:199-213)",
+        "Fikir modu: Claude --tools \"\" (claude.txt:259-263) + Codex exec -s read-only (codex.txt:92-95), yalnızca home-dizini canary testini geçerse",
+        "Canary testi: repoya enjeksiyon dosyası + repo dışı sahte canary; canary metni stream/SQLite/UI'da görünmemeli",
+        "Replay-first: spike fixture'larından beslenen UI",
+        "Arayüz: akan transkript (tur sayacı, süre, durdur), renk + metin etiketi, REPLY_TO bağlantılı animasyonsuz STANCE rozeti, etiket-metin uyuşmazlık işareti, verdict paneli (oy, azınlık görüşü, path:line), aria-live, klavyeyle durdur",
+        "Hiçbir CLI için --yolo/--force/--dangerously-* sunulmaz",
+        "Tur/süre/üye tavanı; SQLite 0600 repo dışında; sunucu 127.0.0.1"
+      ],
+      "out": [
+        "Gemini (ID ile resume yok, gemini.txt:38-40), Cursor (-p varsayılanda yazma+bash, cursor-agent.txt:18-20), Kimi (sandbox bayrağı yok, kimi.txt:13-27), Qwen — varsayılan kapalı, canary + açık onayla v1",
+        "Mahkeme sahnesi, animasyonlu İtiraz, maliyet göstergesi süsü, 'mahkemeye müdahale' (durdur hariç)",
+        "Docker/kapsayıcı yolu (T8'de geri çekildi)",
+        "ACP ortak istemcisi (yalnızca Gemini/Qwen/Kimi'de)"
+      ]
+    },
+    "riskiest_assumption": "Birden fazla satıcının headless CLI'ı, zorlanmış salt-okunur modda ve ID ile resume ile tutarlı bir tartışma yürütebilir. Prototip bunu test etmiyor (context.md:35-37); salt-okuma zorlaması CLI'lar arasında eşit değil (cursor-agent.txt:28-31, gemini.txt:29, codex.txt:92-95); cold start ölçülmedi. Test: 1 günlük spike (claude -p --output-format stream-json --restricted --resume; codex exec --json -s read-only + resume) + aynı spike'ta canary testi.",
+    "first_steps": [
+      "Headless spike (1 gün): Claude ve Codex ile 3 turluk gerçek tartışma; ID ile resume, ham stream şeması, cold start ve token kaydı fixtures/ altına; bitti ölçütü: resume'un önceki okumayı koruduğu kanıt + tur başına süre/token tablosu",
+      "Canary + salt-okuma testi: enjeksiyon dosyası + home'da sahte canary; Claude --restricted/--tools \"\" ve Codex -s read-only altında; bitti: canary metni stream/SQLite/UI'da sıfır; geçmeyen CLI 'kapalı, ileri düzey'; sonuç README'ye",
+      "Replay-first UI + adaptör çekirdeği: fixture'dan SSE akışı, SQLite transkript, bağlantılı STANCE rozeti + uyuşmazlık işareti, verdict paneli; bitti: fixture'dan uçtan uca replay + canlı Claude-only kod modu koşusu; süre tahmini spike ölçümüyle yeniden verilir"
+    ],
+    "consensus": [
+      "Spike UI'dan önce; replay-first ile UI fixture'larla paralel (T1–T2)",
+      "Zorlanmış salt-okuma yoksa üye varsayılan kapalı; canary testi şart (T4–T8)",
+      "Docker şartı düştü: kimlik bilgisi bağlama sızıntı yüzeyini büyütür (T7–T8)",
+      "ACP ortak yol değil (T3; gemini.txt:32, qwen.txt:43, kimi.txt:32)",
+      "Gemini v0 dışı: ID ile resume belgelenmemiş (gemini.txt:38-40)",
+      "v0 arayüzü karar paneli + bağlantılı animasyonsuz STANCE rozeti; sahne v1'e (T14–T16)",
+      "Token tahminleri ölçümle çürüdü: dava ≈1,2M, üye turu 31–54k (conversation.md:213-217); cold start ölçülmedi (T17–T18)",
+      "Tehlikeli bayraklar üründe sunulmaz"
+    ],
+    "disagreements": [
+      {
+        "topic": "v0 Claude(+Codex fikir modu): koşullu go mu, kapsam değişikliği mi?",
+        "positions": [
+          {
+            "role": "security",
+            "position": "Kapsam değişikliği; belgelenmeli (T10, closing)"
+          },
+          {
+            "role": "deterministic",
+            "position": "Kapsam daraltması olarak belgelensin (closing koşul 4; motion.md:3-4, :24-26)"
+          },
+          {
+            "role": "optimist",
+            "position": "Fikir modunda Codex ile v0 yine çok-satıcılı; kod modu Claude-only (T12, closing)"
+          }
+        ],
+        "chair_read": "motion.md:3-4 'different coding agents', :24-26 dört CLI sayıyor. Dosya security/deterministic'i destekliyor; optimist'in fikir-modu ayrımı kısmi cevap. v0 README'de 'kod modu tek-satıcı' açıkça yazılır."
+      },
+      {
+        "topic": "Fikir modunda Codex güvenli mi?",
+        "positions": [
+          {
+            "role": "optimist",
+            "position": "Boş cwd + read-only ile yüzey küçük, canary geçince v0'a girer (T12)"
+          },
+          {
+            "role": "security",
+            "position": "Home okuma, env/CLI token'ları ve ağ kalır; Codex'te araçları kapatan bayrak yok (T13)"
+          }
+        ],
+        "chair_read": "codex.txt:92-95 yalnızca sandbox modlarını listeliyor, okuma kapsamı satırı yok; disk-full-read-access örneği hem :54 hem :167'de (iki atıf da geçerli). Dosya 'doğrulanmamış'ı destekliyor; canary şart."
+      },
+      {
+        "topic": "Süre ve token tahmini",
+        "positions": [
+          {
+            "role": "cost-ops",
+            "position": "v0 7–8 gün, spike sonrası revize (T18) [assumption]"
+          },
+          {
+            "role": "skeptic",
+            "position": "Kapsam büyüdü, Gemini'ye süre biçilemez; her şey spike'a bağlı (T17)"
+          }
+        ],
+        "chair_read": "motion.md:38 4–6 günü 'unverified' işaretliyor; iki token ölçümü de oturum içi alt ajanlardan (conversation.md:213-217), headless cold start değil. 'Anlaşılmış tahmin, ölçülmemiş' olarak kaydedildi."
+      },
+      {
+        "topic": "Atıf düzeltmeleri",
+        "positions": [
+          {
+            "role": "deterministic",
+            "position": "--yolo gemini:28/qwen:40/kimi:15; codex:100-102 dangerously-bypass (T9); 'kimi'de json yok' (closing)"
+          },
+          {
+            "role": "optimist",
+            "position": "isim-analiz build kayması 'moderatörsüz' (T15)"
+          }
+        ],
+        "chair_read": "--yolo ve --restricted atıfları doğrulandı (deterministic haklı). kimi.txt:20-21 stream-json var: Kimi'nin boşluğu çıktı değil, zorlama. isim-analiz :40-:105 moderatör seçimli, T3–T6 build etiketli (:68,:77,:90,:99): user-advocate T16 haklı, optimist T15 yanlış."
+      }
+    ],
+    "actions": [
+      "1 günlük headless spike: Claude -p --resume + Codex exec --json resume; cold start, token, ham şema fixture olarak kaydedilsin (context.md:35-37; gemini.txt:38-40 nedeniyle Gemini dışarıda)",
+      "Canary testi altyapısı kur ve her CLI'yı release öncesi geçir; geçmeyen varsayılan kapalı (claude.txt:199-213; codex.txt:92-95, :54; cursor-agent.txt:18-20; kimi.txt:13-27)",
+      "README'de 'v0: kod modu tek-satıcı, kapsam daraltması' açıkça yazılsın (motion.md:3-4, :24-26)",
+      "v0 UI: karar paneli + REPLY_TO bağlantılı STANCE rozeti + etiket-metin uyuşmazlık işareti; sahne v1'e (isim-analiz conversation.md:68-99; context.md:28-32)",
+      "Tehlikeli bayrakları ürün yüzeyinden çıkar; env allowlist, spawn arg dizisi, 127.0.0.1, SQLite 0600 (gemini.txt:28, qwen.txt:40, kimi.txt:15, codex.txt:100-102, cursor-agent.txt:39)",
+      "Yayından önce her satıcının ToS'unu headless/abonelik kullanımı için kontrol et; adaptör başına fixture + CLI sürüm kapısı ekle (qwen.txt:34 -p deprecated) [assumption]",
+      "Spike ölçümünden sonra 7–8 günlük v0 tahminini yeniden ver; tur/süre/üye tavanı koy (conversation.md:213-217, :237-242)"
+    ]
+  }
+}
