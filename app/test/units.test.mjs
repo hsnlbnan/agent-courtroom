@@ -1,7 +1,7 @@
 // Pure modules and the process runner, without a server.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { resolveModel } from '../adapters/index.mjs';
@@ -57,6 +57,7 @@ const providers = [
   { id: 'codex', status: 'enabled', installed: true, modes: ['code', 'idea'], models: ['codex', 'codex:gpt-6-luna'] },
   { id: 'qwen', status: 'enabled', installed: true, connected: true, modes: ['idea'], models: ['qwen'] },
   { id: 'kimi', status: 'untested', installed: true, modes: ['code', 'idea'], models: ['kimi'] },
+  { id: 'cursor', status: 'enabled', installed: true, connected: true, modes: ['code', 'idea'], models: ['cursor'] },
 ];
 const roles = [{ role: 'optimist', model: 'sonnet' }, { role: 'skeptic', model: 'opus' }];
 const okPath = (p, mode) => ({ path: `/home/u/${p}`, mode });
@@ -80,6 +81,18 @@ test('new case: provider models must be usable, and cleared for the mode', () =>
   assert.equal(parse({ ...base, idea: 'x', models: { optimist: 'codex:gpt-6-luna' } }).options.models.optimist, 'codex:gpt-6-luna');
   assert.equal(parse({ ...base, idea: 'x', models: { optimist: 'nonsense' } }).options.models.optimist, 'sonnet'); // role default
   assert.equal(parse({ ...base, idea: 'x', chairModel: 'codex' }).options.chairModel, 'opus'); // the judge stays on Claude
+});
+
+test('new case: a provider can refuse a code-mode target (Cursor and a repo with its own .cursor folder)', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'council-cursor-case-'));
+  mkdirSync(join(dir, '.cursor'));
+  try {
+    const at = (p, mode) => ({ path: p === '~/rigged' ? dir : `/home/u/${p}`, mode });
+    const body = { members: ['optimist', 'skeptic'], models: { optimist: 'cursor' } };
+    assert.equal(parseNewCase({ ...body, target: '~/rigged' }, { providers, roles, check: at }).code, 'target_has_cursor_config');
+    assert.equal(parseNewCase({ ...body, target: '~/rigged', models: {} }, { providers, roles, check: at }).error, undefined); // no Cursor member
+    assert.equal(parseNewCase({ ...body, idea: 'x' }, { providers, roles, check: at }).error, undefined); // idea mode runs in an empty folder
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test('routes: unknown paths are 404, known paths with another method 405, parameters are named', () => {

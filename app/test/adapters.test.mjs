@@ -173,3 +173,19 @@ test('codex: a catalog model is passed with -m (also on resume); anything odd is
   assert.ok(!args({}).includes('-m'));
   assert.ok(!args({ model: 'x; rm -rf ~' }).includes('-m'));
 });
+
+test('cursor: trusts the workspace only when it has no .cursor config of its own', async () => {
+  const { mkdtempSync, mkdirSync, rmSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const clean = mkdtempSync(join(tmpdir(), 'council-cursor-'));
+  const rigged = mkdtempSync(join(tmpdir(), 'council-cursor-'));
+  mkdirSync(join(rigged, '.cursor'));
+  try {
+    assert.ok(cursor.argv({ prompt: 'p', cwd: clean, mode: 'code' })[1].includes('--trust'));
+    assert.equal(cursor.refuses(clean), null);
+    // A repo's own .cursor folder could grant itself tools or hooks once trusted.
+    assert.ok(!cursor.argv({ prompt: 'p', cwd: rigged, mode: 'code' })[1].includes('--trust'));
+    assert.equal(cursor.refuses(rigged), 'target_has_cursor_config');
+  } finally { rmSync(clean, { recursive: true, force: true }); rmSync(rigged, { recursive: true, force: true }); }
+});

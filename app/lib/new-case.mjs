@@ -2,6 +2,7 @@
 // in the form (`idea`, or free text in `target`) or a path: a folder means code mode, a .md/.txt
 // file an idea from that file; `mode` may override. Error codes are part of the API (the UI
 // translates them).
+import { resolveModel } from '../adapters/index.mjs';
 import { IDEA_MAX } from './context.mjs';
 import { modelPolicy } from './providers.mjs';
 import { customRoles, DEFAULT_MEMBERS, listRoles, MODELS } from './roles.mjs';
@@ -52,6 +53,9 @@ export function parseNewCase(body, { providers, roles = listRoles(), check = che
   if (subject.error) return subject;
   const bench = benchOf(body, subject.mode, providers, roles);
   if (bench.error) return bench;
+  // A provider may refuse a code-mode target it cannot read safely (Cursor and a repo's own .cursor config).
+  const refusal = subject.mode === 'code' && bench.members.map((r) => resolveModel(bench.models[r]).adapter.refuses?.(subject.target)).find(Boolean);
+  if (refusal) return fail(refusal, 'This folder has its own config for one of the chosen CLIs, so that CLI cannot read it');
   const maxTurns = Math.min(Math.max(Number(body.maxTurns) || 6, 2), 18);
   const focus = String(body.focus ?? '').trim().slice(0, 300);
   const title = subject.idea ? focus || subject.idea.split('\n').map((l) => l.replace(/^#+\s*/, '').trim()).find(Boolean)?.slice(0, 80) : undefined;

@@ -6,7 +6,7 @@
 // Every adapter runs with its own config home under ~/.agent-council, so the
 // user's global settings, MCP servers, hooks and context files stay out, and
 // passes through only the one API key variable its CLI needs.
-import { mkdirSync, chmodSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, chmodSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { APP_HOME } from '../lib/paths.mjs';
 
@@ -72,6 +72,9 @@ export const qwen = {
 // Print mode "has access to all tools, including write and bash": the isolated
 // cli-config.json denies shell, writes, web and MCP; --mode ask is read-only per
 // --help [enforcement unverified]. Never pass -f/--force/--yolo or --approve-mcps.
+// Headless runs stop at a workspace-trust prompt. --trust answers it, but trusting a folder also
+// loads its own .cursor config (permissions, hooks, MCP), so it is passed only for folders without one.
+const ownCursorConfig = (cwd) => !!cwd && existsSync(join(cwd, '.cursor'));
 export const cursor = {
   vendor: 'cursor',
   name: 'Cursor',
@@ -90,8 +93,11 @@ export const cursor = {
     } }, null, 2),
   }),
   env: () => ({ CURSOR_CONFIG_DIR: homeFor('cursor'), ...pass('CURSOR_API_KEY') }),
+  /** Why this folder cannot be a code-mode target for Cursor, as an API error code; null if it can. */
+  refuses: (cwd) => (ownCursorConfig(cwd) ? 'target_has_cursor_config' : null),
   argv({ prompt, sessionId, cwd }) {
     const a = ['-p', '--output-format', 'stream-json', '--stream-partial-output', '--mode', 'ask', '--workspace', cwd];
+    if (!ownCursorConfig(cwd)) a.push('--trust');
     if (sessionId) a.push('--resume', sessionId);
     return ['cursor-agent', [...a, prompt]];
   },
