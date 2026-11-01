@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- The courtroom's wall emblem over the bench, in the stage's dark palette; the dot is the live speaker. -->
+  <rect width="32" height="32" rx="7" fill="#16161a"/>
+  <circle cx="16" cy="13.5" r="6.4" fill="none" stroke="#c4ab8c" stroke-width="2.6"/>
+  <circle cx="16" cy="13.5" r="2.1" fill="#ef6a52"/>
+  <rect x="7" y="23.2" width="18" height="2.8" rx="1.4" fill="#c4ab8c"/>
+</svg>
