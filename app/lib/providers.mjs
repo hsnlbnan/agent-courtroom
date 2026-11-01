@@ -45,8 +45,9 @@ export function listProviders() {
   const fresh = cache && Date.now() - cachedAt < CACHE_MS;
   if (!fresh && !inflight) {
     const connected = connections();
-    // COUNCIL_OFFLINE skips network lookups (Codex's model catalog); quiet runs (tests, scripts) imply it.
-    const offline = process.env.COUNCIL_OFFLINE === '1' || process.env.COUNCIL_QUIET === '1';
+    // COUNCIL_OFFLINE skips network lookups (Codex's model catalog). It is separate from COUNCIL_QUIET:
+    // the CLI runs the server quietly, and its model menu still needs the catalog.
+    const offline = process.env.COUNCIL_OFFLINE === '1';
     inflight = Promise.all(ADAPTERS.map((a) => describe(a, connected, offline)))
       .then((list) => { cache = list; cachedAt = Date.now(); return list; })
       .finally(() => { inflight = null; });

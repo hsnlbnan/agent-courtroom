@@ -52,7 +52,7 @@ before(async () => {
   writeFileSync(join(tmp, 'claude'), `#!/bin/sh\ncase "$*" in *"The hearing below has ended"*) printf '%s\\n' '${analysis}' ;; *) sleep 30 ;; esac\n`);
   chmodSync(join(tmp, 'claude'), 0o755);
   child = spawn(process.execPath, [SERVER, '--port', String(port)], {
-    env: { ...process.env, PATH: `${tmp}:${process.env.PATH}`, COUNCIL_TOKEN: TOKEN, COUNCIL_DB: join(tmp, 'db', 'council.db'), COUNCIL_QUIET: '1' },
+    env: { ...process.env, PATH: `${tmp}:${process.env.PATH}`, COUNCIL_TOKEN: TOKEN, COUNCIL_DB: join(tmp, 'db', 'council.db'), COUNCIL_QUIET: '1', COUNCIL_OFFLINE: '1' },
     stdio: 'ignore',
   });
   for (let i = 0; i < 50; i++) {

@@ -24,8 +24,9 @@ export default function MemberChips({ roles, custom, chosen, modelOf, chairModel
       {seats.map((s) => {
         const on = chosen.includes(s.key);
         return (
-          <div key={s.key} className={`chip${s.custom ? ' custom' : ''}${on ? ' on' : ''}`} style={{ ['--accent' as string]: accentOf(s.key) }} title={s.title}>
-            <label>
+          <div key={s.key} className={`chip${s.custom ? ' custom' : ''}${on ? ' on' : ''}`} style={{ ['--accent' as string]: accentOf(s.key) }}>
+            {/* The lens is the name's tooltip only: on the chip it would also show over the open model menu. */}
+            <label title={s.title}>
               <input type="checkbox" checked={on} onChange={() => onToggle(s.key)} />
               <span className="dot" aria-hidden="true" />{s.label}
             </label>

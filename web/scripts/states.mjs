@@ -31,7 +31,7 @@ writeFileSync(join(target, 'README.md'), '# Örnek proje\n\nTek komutla kurulur:
 const PORT = 4460;
 const TOKEN = 'states-token-0123456789';
 const server = spawn(process.execPath, [join(HERE, '../../app/server.mjs'), '--port', String(PORT)], {
-  env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, COUNCIL_TOKEN: TOKEN, COUNCIL_DB: join(work, 'db', 'council.db'), COUNCIL_QUIET: '1' },
+  env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, COUNCIL_TOKEN: TOKEN, COUNCIL_DB: join(work, 'db', 'council.db'), COUNCIL_QUIET: '1', COUNCIL_OFFLINE: '1' },
   stdio: 'ignore',
 });
 const api = (path, body) => fetch(`http://127.0.0.1:${PORT}${path}`, {
