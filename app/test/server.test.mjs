@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { request } from 'node:http';
 import { createServer } from 'node:net';
-import { mkdtempSync, writeFileSync, chmodSync, rmSync, readFileSync, statSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, chmodSync, mkdirSync, rmSync, readFileSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -188,7 +188,9 @@ test('inline idea: becomes the case idea.md (0600), idea mode, titled from its f
   await call(`/api/cases/${f.json.id}/stop`, { method: 'POST' });
 
   assert.equal((await call('/api/cases', { method: 'POST', body: { idea: 'x'.repeat(12_001), members: ['optimist', 'skeptic'] } })).json.code, 'idea_too_long');
-  assert.equal((await call('/api/cases', { method: 'POST', body: { target: join(homedir(), 'Library', 'Keychains'), members: ['optimist', 'skeptic'] } })).json.code, 'target_sensitive');
+  // The app's own data folder is a credential folder that exists on every OS (macOS-only ones like Library/Keychains do not).
+  mkdirSync(join(homedir(), '.agent-council'), { recursive: true });
+  assert.equal((await call('/api/cases', { method: 'POST', body: { target: join(homedir(), '.agent-council'), members: ['optimist', 'skeptic'] } })).json.code, 'target_sensitive');
   assert.equal((await call('/api/cases', { method: 'POST', body: { target: join(homedir(), '.ssh'), members: ['optimist', 'skeptic'] } })).status, 400);
 });
 
